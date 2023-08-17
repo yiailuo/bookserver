@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.manager.mapper.UserMapper">
+    <select id="findAll" resultType="com.book.manager.model.User">
+        SELECT
+        T.id_ as id,T.realname_ as realname,T.username_ as username,T.role_ as role,T.STATUS_ as status
+        FROM USERS T
+        WHERE 1=1
+        <if test="username!=null and username!=''">
+            AND T.username_ like '%${username}%'
+        </if>
+        <if test="realname!=null and realname!=''">
+            AND T.realname_ like '%${realname}%'
+        </if>
+        <if test="role!=null and role!=''">
+            AND T.ROLE_ like '%${role}%'
+        </if>
+        <if test="status!=null and status!=''">
+            AND T.STATUS_ = #{status}
+        </if>
+        ORDER BY T.createtime
+        <if test="isPage">
+	        limit #{startPosition} , #{sizePerPage}
+        </if>
+    </select>
+    <select id="count" resultType="Long">
+        select count(1) from users
+    </select>
+</mapper>

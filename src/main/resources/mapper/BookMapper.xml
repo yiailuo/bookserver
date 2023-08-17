@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.manager.mapper.BookMapper">
+    <select id="findAll" resultType="com.book.manager.model.Book">
+        SELECT
+            B.ID_ as id,
+            B.NAME_ as name,
+            BT.NAME_ as typename,
+            BS.NAME_ as bookselfname,
+            B.PUBLISHER_ as publisher,
+            B.AUTHOR_ as author,
+            B.PRICE_ as price,
+            B.BORROW_ as borrow,
+            B.STOCK_ as stock
+        FROM BOOK B LEFT JOIN BOOKTYPE BT ON B.TYPE_ID_=BT.ID_
+        LEFT JOIN BOOKSELF BS ON B.BOOKSELF_ID_=BS.ID_
+        WHERE 1=1
+        <if test="name!=null and name!=''">
+            AND B.NAME_ like '%${name}%'
+        </if>
+        <if test="typeid!=null and typeid!=''">
+            AND B.TYPE_ID_ = #{typeid}
+        </if>
+        <if test="bookselfid!=null and bookselfid!=''">
+            AND B.BOOKSELF_ID_ = #{bookselfid}
+        </if>
+        <if test="publisher!=null and publisher!=''">
+            AND B.PUBLISHER_ like '%${publisher}%'
+        </if>
+        <if test="author!=null and author!=''">
+            AND B.AUTHOR_ like '%${author}%'
+        </if>
+        ORDER BY B.CREATETIME
+        <if test="isPage">
+	        limit #{startPosition} , #{sizePerPage}
+        </if>
+    </select>
+    <select id="count" resultType="Long">
+        select count(1) from book
+    </select>
+</mapper>

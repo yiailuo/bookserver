@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.manager.mapper.BookSelfMapper">
+    <select id="findAll" resultType="com.book.manager.model.BookSelf">
+        SELECT
+        T.ID_ as id,T.NAME_ as name,T.CAPACITY_ as capacity,T.USES_ as uses
+        FROM BOOKSELF T
+        WHERE 1=1
+        <if test="name!=null and name!=''">
+            AND T.NAME_ like '%${name}%'
+        </if>
+        <if test="capacity1!=null and capacity1!=''">
+            AND T.CAPACITY_ &gt; #{capacity1}
+        </if>
+        <if test="capacity2!=null and capacity2!=''">
+            AND T.CAPACITY_ &lt; #{capacity2}
+        </if>
+        ORDER BY T.createtime
+        <if test="isPage">
+	        limit #{startPosition} , #{sizePerPage}
+        </if>
+    </select>
+    <select id="count" resultType="Long">
+        select count(1) from BOOKSELF
+    </select>
+</mapper>

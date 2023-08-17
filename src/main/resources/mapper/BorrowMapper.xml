@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.manager.mapper.BorrowMapper">
+    <select id="findAll" resultType="com.book.manager.model.Borrow">
+        SELECT
+            B.ID_ as id,
+            BK.NAME_ as bookname,
+            BK.PUBLISHER_ as publisher,
+            BK.PRICE_ as price,
+            B.BORROWDATE_ as borrowdate,
+            B.PLANRETURNDATE_ as planreturndate,
+            B.REALITYRETURNDATE_ as realityreturndate,
+            U.REALNAME_ as username,
+            U.CARD_ as card,
+            U.PHONE_ as phone
+        FROM BORROW B LEFT JOIN BOOK BK ON B.BOOKID_=BK.ID_
+        LEFT JOIN USERS U ON B.USERID_=U.ID_
+        WHERE 1=1
+        <if test="bookname!=null and bookname!=''">
+            AND BK.NAME_ like '%${bookname}%'
+        </if>
+        <if test="card!=null and card!=''">
+            AND U.CARD_ like '%${card}%'
+        </if>
+        <if test="usercard!=null and usercard!=''">
+            AND U.CARD_ = #{usercard}
+        </if>
+        <if test="phone!=null and phone!=''">
+            AND U.PHONE_ like '%${phone}%'
+        </if>
+        <if test="username!=null and username!=''">
+            AND U.REALNAME_ like '%${username}%'
+        </if>
+        ORDER BY B.PLANRETURNDATE_ desc
+        <if test="isPage">
+	        limit #{startPosition} , #{sizePerPage}
+        </if>
+    </select>
+    <select id="count" resultType="Long">
+        select count(1) from BORROW
+    </select>
+</mapper>

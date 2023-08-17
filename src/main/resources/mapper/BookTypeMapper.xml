@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.book.manager.mapper.BookTypeMapper">
+    <select id="findAll" resultType="com.book.manager.model.BookType">
+        SELECT
+        T.id_ as id,T.name_ as name
+        FROM BOOKTYPE T
+        WHERE 1=1
+        <if test="name!=null and name!=''">
+            AND T.name_ like '%${name}%'
+        </if>
+        ORDER BY T.createtime
+        <if test="isPage">
+	        limit #{startPosition} , #{sizePerPage}
+        </if>
+    </select>
+    <select id="count" resultType="Long">
+        select count(1) from BOOKTYPE
+    </select>
+</mapper>
